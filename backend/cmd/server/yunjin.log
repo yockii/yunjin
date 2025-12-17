@@ -1,0 +1,2 @@
+{"time":"2025-12-15T20:50:51.078977+08:00","level":"ERROR","msg":"绑定失败","err":"bind: schema: interface must be a pointer to struct"}
+{"time":"2025-12-15T21:06:43.9843241+08:00","level":"ERROR","msg":"计数失败","err":"ERROR: relation \"tags\" does not exist (SQLSTATE 42P01)"}
