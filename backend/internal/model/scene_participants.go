@@ -1,13 +1,13 @@
 package model
 
-// 场景参与者，描述了场景中角色的参与情况和角色在场景中的角色
-type SceneParticipants struct {
+// 剧情节点参与者，描述了剧情节点中角色的参与情况和角色在剧情节点中的角色
+type StoryEventParticipants struct {
 	BaseModel
-	SceneID     uint64 `gorm:"not null;index" json:"scene_id"`
-	CharacterID uint64 `gorm:"not null;index" json:"character_id"`
-	RoleInScene string `gorm:"size:200" json:"role_in_scene"` // 角色在场景中的角色
+	StoryEventID uint64 `gorm:"not null;index" json:"story_event_id"`
+	CharacterID  uint64 `gorm:"not null;index" json:"character_id"`
+	RoleInEvent  string `gorm:"size:200" json:"role_in_event"` // 角色在节点中的角色
 }
 
 func init() {
-	Models = append(Models, &SceneParticipants{})
+	Models = append(Models, &StoryEventParticipants{})
 }
