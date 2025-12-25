@@ -34,14 +34,14 @@
                 >
                     <div
                         id="cover-front"
-                        class="absolute inset-0 bg-linear-to-br from-black to-blue-300 rounded-lg flex items-center justify-center text-white text-4xl font-bold tracking-widest shadow-2xl backface-hidden"
+                        class="absolute inset-0 bg-linear-to-br from-black to-blue-300 rounded-lg flex items-center justify-center text-white text-4xl font-bold tracking-widest shadow-2xl backface-hidden border-gray-300 border border-solid"
                     >
-                        云烬
+                        欢迎使用
                     </div>
                     <!-- 封面内页 -->
                     <div
                         id="cover-inner"
-                        class="absolute inset-0 bg-[#f4f1ea] rounded-lg rotate-y-180 backface-hidden"
+                        class="absolute inset-0 bg-[#f4f1ea] rounded-lg rotate-y-180 backface-hidden border-gray-300 border border-solid"
                     ></div>
                 </div>
 
@@ -50,39 +50,20 @@
                     class="absolute left-0 top-1 right-2 bottom-6 bg-[#f6f2ea] rounded-md shadow-inner"
                 >
                     <div
-                        class="w-full p-8 absolute inset-0 transform-none flex flex-col gap-2 justify-center items-center"
+                        id="page-current"
+                        class="z-10 w-full h-full absolute inset-0 transform-3d rounded-md border-gray-300 border border-solid"
                     >
-                        <!-- 内页内容 -->
-                        <FloatLabel variant="on">
-                            <InputText
-                                id="username"
-                                size="large"
-                                fluid
-                                v-model="loginInfo.username"
-                                autocomplete="off"
-                            />
-                            <label for="username">用户名</label>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <Password
-                                size="large"
-                                fluid
-                                inputId="password"
-                                v-model="loginInfo.password"
-                            />
-                            <label for="password">密码</label>
-                        </FloatLabel>
-                        <ButtonGroup class="flex justify-center items-center">
-                            <Button
-                                label="登录"
-                                size="large"
-                                icon="pi pi-check"
-                                class="w-full"
-                                :loading="loading"
-                                @click="login"
-                            />
-                        </ButtonGroup>
+                        <LoginForm
+                            @login-failed="tearPage"
+                            v-model:username="loginInfo.username"
+                            v-model:password="loginInfo.password"
+                        />
                     </div>
+
+                    <div
+                        id="page-tear"
+                        class="z-0 w-full h-full absolute inset-0 transform-3d pointer-events-none backface-hidden bg-[#f6f2ea] rounded-md shadow-inner border-gray-300 border border-solid"
+                    ></div>
                 </div>
                 <!-- Book Shadow -->
                 <div
@@ -96,19 +77,15 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import gsap from "gsap";
-import { FloatLabel, InputText, Password, ButtonGroup, Button } from "primevue";
+import LoginForm from "@/components/LoginForm.vue";
+import { LoginInfo } from "@/types/user-info";
 
 const loginInfo = ref<LoginInfo>({
     username: "",
     password: "",
 });
-const loading = ref(false);
 
-const login = () => {
-    // 登录逻辑
-};
-
-const animate = () => {
+const mountedAnimate = () => {
     const tl = gsap.timeline({
         defaults: {
             ease: "power3.inOut",
@@ -145,13 +122,62 @@ const animate = () => {
         {
             scaleY: 0.6,
             duration: 2,
-            bottom: "+=10",
+            bottom: "+=12",
         },
         "<",
     );
 };
 
+const tearPage = () => {
+    const tear = document.getElementById("page-tear");
+    const current = document.getElementById("page-current");
+
+    tear.innerHTML = current.innerHTML;
+    loginInfo.value.username = "";
+    loginInfo.value.password = "";
+
+    gsap.set(tear, {
+        zIndex: 20,
+        opacity: 1,
+        rotateY: 0,
+        rotateZ: 0,
+        x: 0,
+        y: 0,
+        skewX: 0,
+        skewY: 0,
+        transformOrigin: "0% 100%",
+    });
+
+    const tl = gsap.timeline({
+        ease: "power2.inOut",
+    });
+    tl.to(tear, {
+        rotateY: -28,
+        skewY: -18,
+        duration: 0.35,
+    });
+    tl.to(tear, {
+        delay: 0.2,
+        rotateY: -55,
+        skewX: -10,
+        skewY: -8,
+        duration: 0.6,
+    });
+    tl.to(tear, {
+        rotateY: -95,
+        rotateZ: 8,
+        x: 140,
+        y: 90,
+        opacity: 0,
+        duration: 0.9,
+    });
+
+    // tl.call(() => {
+    //     gsap.set(tear, { zIndex: 0, rotateY: 0, x: 0, y: 0 });
+    // });
+};
+
 onMounted(() => {
-    animate();
+    mountedAnimate();
 });
 </script>
