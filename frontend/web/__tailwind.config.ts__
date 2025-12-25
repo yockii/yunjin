@@ -1,0 +1,16 @@
+export default {
+  theme: {
+    extend: {
+      transformStyle: {
+        "preserve-3d": "preserve-3d",
+      },
+    },
+  },
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".transform-style-preserve-3d": { transformStyle: "preserve-3d" },
+      });
+    },
+  ],
+};
